@@ -1,595 +1,508 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState } from "react";
 
-const TABS = [
-  { id: 'architecture', label: '🏗️ Architektura' },
-  { id: 'components', label: '🔧 Komponenty' },
-  { id: 'metrics', label: '📊 Metryki' },
-  { id: 'dataflow', label: '🔄 Przepływ danych' },
-  { id: 'ai', label: '🤖 Davis AI' },
-]
-
-function ArchitectureView() {
-  return (
-    <div className="arch-grid">
-      <div>
-        <h2 className="section-title">Architektura Infrastruktury Dynatrace</h2>
-        <p className="section-subtitle">
-          Dynatrace to platforma observability oparta na AI, która zbiera dane z całego środowiska —
-          od hostów i kontenerów, przez aplikacje, aż po usługi chmurowe. Dane przepływają od
-          agentów przez ActiveGate do klastra Dynatrace.
-        </p>
-      </div>
-
-      <div className="card">
-        <div className="card-header">
-          <span className="card-icon">🔄</span>
-          <h2>Przepływ danych w czasie rzeczywistym</h2>
-        </div>
-        <div className="arch-flow">
-          <div className="arch-layer">
-            <div className="layer-label">Warstwa zbierania</div>
-            <div className="layer-box teal">
-              <div className="box-icon">🖥️</div>
-              <div className="box-title">OneAgent</div>
-              <div className="box-sub">Host, kontener, proces</div>
-            </div>
-            <div className="layer-box teal">
-              <div className="box-icon">☁️</div>
-              <div className="box-title">Cloud Integrations</div>
-              <div className="box-sub">AWS, Azure, GCP</div>
-            </div>
-            <div className="layer-box teal">
-              <div className="box-icon">📡</div>
-              <div className="box-title">API Ingest</div>
-              <div className="box-sub">Metryki, logi, traces</div>
-            </div>
-          </div>
-
-          <div className="arch-arrow">→</div>
-
-          <div className="arch-layer">
-            <div className="layer-label">Warstwa pośrednicząca</div>
-            <div className="layer-box green">
-              <div className="box-icon">🔀</div>
-              <div className="box-title">ActiveGate</div>
-              <div className="box-sub">Routing i agregacja</div>
-            </div>
-            <div className="layer-box green">
-              <div className="box-icon">🔒</div>
-              <div className="box-title">Environment AG</div>
-              <div className="box-sub">Proxy dla sieci prywatnych</div>
-            </div>
-          </div>
-
-          <div className="arch-arrow">→</div>
-
-          <div className="arch-layer">
-            <div className="layer-label">Platforma Dynatrace</div>
-            <div className="layer-box purple">
-              <div className="box-icon">🧠</div>
-              <div className="box-title">Davis AI Engine</div>
-              <div className="box-sub">Analiza przyczynowa</div>
-            </div>
-            <div className="layer-box purple">
-              <div className="box-icon">💾</div>
-              <div className="box-title">Grail Data Lakehouse</div>
-              <div className="box-sub">Nieograniczone przechowywanie</div>
-            </div>
-          </div>
-
-          <div className="arch-arrow">→</div>
-
-          <div className="arch-layer">
-            <div className="layer-label">Warstwa prezentacji</div>
-            <div className="layer-box orange">
-              <div className="box-icon">📋</div>
-              <div className="box-title">Dashboards</div>
-              <div className="box-sub">Wizualizacja i raporty</div>
-            </div>
-            <div className="layer-box orange">
-              <div className="box-icon">🔔</div>
-              <div className="box-title">Alerting</div>
-              <div className="box-sub">Powiadomienia i integracje</div>
-            </div>
-            <div className="layer-box orange">
-              <div className="box-icon">🤖</div>
-              <div className="box-title">Auto-Remediation</div>
-              <div className="box-sub">Automatyczna naprawa</div>
-            </div>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '16px', overflow: 'hidden', borderRadius: '4px' }}>
-          <div className="data-stream" />
-        </div>
-      </div>
-
-      <div className="desc-grid">
-        <div className="desc-item">
-          <div className="desc-item-header">
-            <span className="desc-badge badge-teal">OneAgent</span>
-          </div>
-          <h3>Automatyczne instrumentowanie</h3>
-          <p>Jeden agent instalowany na hoście automatycznie odkrywa i monitoruje wszystkie procesy, usługi i zależności bez dodatkowej konfiguracji.</p>
-          <ul>
-            <li>Pełne instrumentowanie kodu (bytecode injection)</li>
-            <li>Odkrywanie topologii w czasie rzeczywistym</li>
-            <li>Monitoring procesów, JVM, .NET CLR</li>
-            <li>Automatyczna detekcja technologii</li>
-          </ul>
-        </div>
-        <div className="desc-item">
-          <div className="desc-item-header">
-            <span className="desc-badge badge-green">ActiveGate</span>
-          </div>
-          <h3>Brama komunikacyjna</h3>
-          <p>ActiveGate pełni rolę proxy i aggregatora danych. Umożliwia bezpieczną komunikację z Dynatrace z sieci prywatnych i redukuje ilość połączeń wychodzących.</p>
-          <ul>
-            <li>Kompresja i szyfrowanie danych</li>
-            <li>Wsparcie dla JMX, SNMP, WMI</li>
-            <li>Synthetic monitoring execution</li>
-            <li>Rozszerzenia i pluginy</li>
-          </ul>
-        </div>
-        <div className="desc-item">
-          <div className="desc-item-header">
-            <span className="desc-badge badge-purple">Grail</span>
-          </div>
-          <h3>Data Lakehouse nowej generacji</h3>
-          <p>Grail to platforma do przechowywania i analizy danych observability, łącząca zalety data lake i data warehouse z możliwościami DQL (Dynatrace Query Language).</p>
-          <ul>
-            <li>Unified storage: metryki, logi, traces, eventy</li>
-            <li>Nieograniczona retencja danych</li>
-            <li>Analityka w czasie rzeczywistym i historyczna</li>
-            <li>DQL — potężny język zapytań</li>
-          </ul>
-        </div>
-        <div className="desc-item">
-          <div className="desc-item-header">
-            <span className="desc-badge badge-orange">Smartscape</span>
-          </div>
-          <h3>Mapa topologii 4D</h3>
-          <p>Smartscape to dynamiczna mapa zależności między wszystkimi bytami w środowisku — od hostów i procesów przez usługi do aplikacji i użytkowników końcowych.</p>
-          <ul>
-            <li>Automatyczna detekcja zależności</li>
-            <li>Perspektywa: host → proces → usługa → aplikacja</li>
-            <li>Historia zmian topologii</li>
-            <li>Kontekst dla anomalii Davis AI</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ComponentsView() {
-  const components = [
+const data = {
+  layers: [
     {
-      icon: '🖥️',
-      name: 'OneAgent',
-      badge: 'badge-teal',
-      badgeLabel: 'Agent',
-      description: 'Lekki agent instalowany na każdym hoście (Linux, Windows, AIX). Automatycznie instrumentuje kod aplikacji i zbiera dane bez restartu procesów.',
-      details: [
-        'Instalacja: curl -O <url> && sudo /bin/sh dynatrace-install.sh',
-        'Tryb: Full-stack, Infrastructure, PaaS, K8s',
-        'Protokół: HTTPS/443 do ActiveGate lub bezpośrednio do SaaS',
-        'Narzut CPU: < 1%, RAM: ~150MB',
+      id: "business",
+      label: "WARSTWA BIZNESOWA",
+      color: "#1a1a2e",
+      accent: "#e94560",
+      items: [
+        { id: "b1", icon: "👤", label: "Użytkownicy końcowi", sub: "Aplikacje web / mobile / IoT" },
+        { id: "b2", icon: "📊", label: "Dashboardy Dynatrace", sub: "Davis AI • Alerting • Reports" },
+        { id: "b3", icon: "🔔", label: "Alerty & Eskalacje", sub: "Email • PagerDuty • Slack • ServiceNow" },
+        { id: "b4", icon: "📋", label: "SLO / SLA Reporting", sub: "Error budget • Compliance • Trendy" },
       ],
     },
     {
-      icon: '🔀',
-      name: 'ActiveGate',
-      badge: 'badge-green',
-      badgeLabel: 'Gateway',
-      description: 'Serwer pośredniczący między agentami/źródłami a klastrem Dynatrace. Wymagany dla sieci prywatnych, monitoring syntetyczny i rozszerzenia.',
-      details: [
-        'Typy: Environment ActiveGate, Cluster ActiveGate (Managed)',
-        'Protokół: gRPC, HTTP/2',
-        'Możliwości: JMX, SNMP, WMI, VMware, SQL',
-        'Wysoka dostępność: load balancing między AG',
+      id: "platform",
+      label: "DYNATRACE PLATFORM (SaaS / Managed)",
+      color: "#0f3460",
+      accent: "#00b4d8",
+      items: [
+        { id: "p1", icon: "🧠", label: "Davis AI Engine", sub: "Automatyczny root cause analysis" },
+        { id: "p2", icon: "🗺️", label: "SmartScape Topology", sub: "Auto-wykrywanie zależności 4D" },
+        { id: "p3", icon: "📈", label: "Metrics & Traces", sub: "Full-stack observability / PurePath" },
+        { id: "p4", icon: "📝", label: "Log Management (Grail)", sub: "Centralizacja logów • DQL" },
+        { id: "p5", icon: "💬", label: "Davis CoPilot", sub: "AI asystent • Natural language queries" },
       ],
     },
     {
-      icon: '⚙️',
-      name: 'Dynatrace Operator',
-      badge: 'badge-purple',
-      badgeLabel: 'Kubernetes',
-      description: 'Operator Kubernetes automatyzujący wdrożenie i zarządzanie OneAgent oraz ActiveGate w klastrach K8s i OpenShift.',
-      details: [
-        'CRD: DynaKube — jeden CR rządzi wszystkim',
-        'Tryby: ClassicFullStack, CloudNativeFullStack, AppOnly',
-        'Automatyczna aktualizacja agentów',
-        'Webhook injection dla podów',
+      id: "activegate",
+      label: "ACTIVEGATE (On-premise / Cloud)",
+      color: "#16213e",
+      accent: "#06d6a0",
+      items: [
+        { id: "ag1", icon: "🔀", label: "Environment ActiveGate", sub: "Proxy • Routing • TLS termination" },
+        { id: "ag2", icon: "🔌", label: "Extension Framework", sub: "JMX • SNMP • WMI • Custom plugins" },
+        { id: "ag3", icon: "🔬", label: "Synthetic Execution", sub: "Browser & HTTP testy z prywatnych lokacji" },
+        { id: "ag4", icon: "🔐", label: "Cluster ActiveGate", sub: "Managed deployment • HA load balancing" },
       ],
     },
     {
-      icon: '📡',
-      name: 'OpenTelemetry Integration',
-      badge: 'badge-yellow',
-      badgeLabel: 'OTel',
-      description: 'Dynatrace wspiera OpenTelemetry natively — przesyłaj traces, metryki i logi przez OTLP endpoint bezpośrednio do Grail.',
-      details: [
-        'OTLP endpoint: https://<env>.live.dynatrace.com/api/v2/otlp',
-        'Wsparcie: gRPC i HTTP/Protobuf',
-        'Auto-enrichment: dodaje DT context do span-ów',
-        'Integracja z Davis AI przez trace context',
+      id: "infra",
+      label: "INFRASTRUKTURA MONITOROWANA",
+      color: "#0d1b2a",
+      accent: "#ffd166",
+      items: [
+        { id: "i1", icon: "☸️", label: "Kubernetes / OpenShift", sub: "OneAgent DaemonSet • Operator CRD" },
+        { id: "i2", icon: "🐳", label: "Kontenery / Docker", sub: "Auto-instrumentacja procesów" },
+        { id: "i3", icon: "☁️", label: "Azure / AWS / GCP", sub: "Cloud integrations • Native API" },
+        { id: "i4", icon: "🖥️", label: "VM / Bare Metal", sub: "OneAgent host monitoring" },
+        { id: "i5", icon: "🗄️", label: "Bazy Danych", sub: "PostgreSQL • Oracle • MySQL • MSSQL" },
+        { id: "i6", icon: "🌐", label: "Sieci & Load Balancery", sub: "Network flows • F5 • Nginx • HAProxy" },
       ],
     },
     {
-      icon: '🔬',
-      name: 'Synthetic Monitoring',
-      badge: 'badge-orange',
-      badgeLabel: 'Synthetic',
-      description: 'Proaktywne monitorowanie dostępności i wydajności z ponad 90 lokalizacji na całym świecie lub z prywatnych lokalizacji przez ActiveGate.',
-      details: [
-        'Browser monitor: Selenium/Puppeteer skrypty',
-        'HTTP monitor: REST API, strony www',
-        'Prywatne lokalizacje: ActiveGate Synthetic',
-        'SLA reporting i alerty dostępności',
+      id: "oneagent",
+      label: "ONEAGENT — AUTOMATYCZNA INSTRUMENTACJA",
+      color: "#1b2838",
+      accent: "#ef476f",
+      items: [
+        { id: "oa1", icon: "⚡", label: "OneAgent Process", sub: "Auto-inject • Zero config • Self-updating" },
+        { id: "oa2", icon: "📡", label: "Real User Monitoring", sub: "JavaScript agent w przeglądarce" },
+        { id: "oa3", icon: "🔗", label: "Distributed Tracing", sub: "OpenTelemetry • W3C TraceContext • PurePath" },
+        { id: "oa4", icon: "📦", label: "CodeModule (PaaS)", sub: "Lambda • Azure Functions • Fargate" },
       ],
     },
-    {
-      icon: '🔐',
-      name: 'Access i Security',
-      badge: 'badge-purple',
-      badgeLabel: 'Security',
-      description: 'Wielopoziomowa kontrola dostępu oparta na IAM, grupach zarządzania i zasadach RBAC zintegrowanych z dostawcami tożsamości.',
-      details: [
-        'SSO: SAML 2.0, OIDC',
-        'RBAC: Role na poziomie środowiska i konta',
-        'API Tokens: scoped, rotatable, monitorowane',
-        'Audit log: wszystkie akcje użytkowników',
-      ],
-    },
-  ]
+  ],
+};
 
-  return (
-    <div>
-      <h2 className="section-title">Komponenty Dynatrace</h2>
-      <p className="section-subtitle">
-        Pełny ekosystem komponentów budujących platformę observability — od agentów zbierających dane
-        przez bramy komunikacyjne aż po mechanizmy bezpieczeństwa i integracje z ekosystemem cloud-native.
-      </p>
-      <div className="desc-grid">
-        {components.map(c => (
-          <div key={c.name} className="desc-item">
-            <div className="desc-item-header">
-              <span style={{ fontSize: '20px' }}>{c.icon}</span>
-              <span className={`desc-badge ${c.badge}`}>{c.badgeLabel}</span>
-              <h3>{c.name}</h3>
-            </div>
-            <p style={{ marginBottom: '10px' }}>{c.description}</p>
-            <ul>
-              {c.details.map(d => <li key={d}>{d}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+const details = {
+  b1: {
+    title: "Użytkownicy końcowi",
+    desc: "Dynatrace śledzi doświadczenie użytkownika (UX) przez Real User Monitoring. Każda akcja w przeglądarce lub aplikacji mobilnej jest rejestrowana jako 'user session' z pełnym kontekstem backendu.",
+    tags: ["RUM", "Session Replay", "Apdex Score", "Mobile RUM"],
+  },
+  b2: {
+    title: "Dashboardy Dynatrace",
+    desc: "Główny interfejs SaaS dostępny przez przeglądarkę. Davis AI automatycznie grupuje powiązane problemy i wskazuje root cause bez ręcznej analizy. Możliwość tworzenia custom dashboardów przez Davis CoPilot (opis w języku naturalnym).",
+    tags: ["SaaS Console", "Davis AI", "Custom Dashboards", "DQL Notebooks"],
+  },
+  b3: {
+    title: "Alerty & Eskalacje",
+    desc: "Dynatrace wysyła powiadomienia przez wbudowane integracje: email, Slack, PagerDuty, ServiceNow, OpsGenie, Microsoft Teams. Można ustawiać profile alertów, tłumienie, eskalacje i on-call routing.",
+    tags: ["Alerting Profiles", "Integrations", "On-call routing", "Auto-remediation"],
+  },
+  b4: {
+    title: "SLO / SLA Reporting",
+    desc: "Definiowanie Service Level Objectives bezpośrednio w Dynatrace. Monitoring error budget, burn rate alerting i automatyczne raporty compliance. Davis AI wskazuje jakie zdarzenia wpłynęły na SLO.",
+    tags: ["SLO", "Error Budget", "Burn Rate", "Compliance"],
+  },
+  p1: {
+    title: "Davis AI Engine",
+    desc: "Kluczowa różnica Dynatrace vs inne narzędzia. Davis automatycznie koreluje tysiące zdarzeń, eliminuje false positives i wskazuje JEDNĄ przyczynę problemu zamiast setek alertów. Używa topologii Smartscape jako kontekstu przyczynowego — nie potrzebuje ręcznego trenowania modeli ML.",
+    tags: ["Causation AI", "Anomaly Detection", "Auto Baseline", "Zero configuration"],
+  },
+  p2: {
+    title: "SmartScape Topology",
+    desc: "Automatyczna 4-wymiarowa mapa zależności całego środowiska: datacenter → hosty → procesy → usługi → aplikacje. Aktualizuje się w czasie rzeczywistym. Davis AI używa SmartScape do określenia wpływu anomalii na resztę środowiska.",
+    tags: ["Auto-discovery", "4D Topology", "Real-time", "Dependency Map"],
+  },
+  p3: {
+    title: "Metrics & Distributed Traces",
+    desc: "PurePath to technologia Dynatrace śledząca każde żądanie end-to-end — od kliknięcia użytkownika przez wszystkie mikroserwisy aż do bazy danych. Pełna widoczność BEZ próbkowania (100% trace capture). Kompatybilny z OpenTelemetry.",
+    tags: ["PurePath", "Full-stack", "OpenTelemetry", "OTLP ingest"],
+  },
+  p4: {
+    title: "Log Management — Grail",
+    desc: "Grail to data lakehouse nowej generacji łączący logi, metryki i traces w jednym storage. Dynatrace automatycznie koreluje logi z metrykami i trace'ami. DQL (Dynatrace Query Language) umożliwia zaawansowaną analizę bez limitu retencji.",
+    tags: ["Grail", "DQL", "Log correlation", "Unlimited retention"],
+  },
+  p5: {
+    title: "Davis CoPilot",
+    desc: "Konwersacyjny asystent AI wbudowany w Dynatrace. Pozwala zadawać pytania po polsku lub angielsku, automatycznie generuje zapytania DQL, tworzy dashboardy z opisu, analizuje root cause i sugeruje rozwiązania. Oparty na LLM z kontekstem danych observability.",
+    tags: ["Natural Language", "DQL Generation", "AI analysis", "Dashboard builder"],
+  },
+  ag1: {
+    title: "Environment ActiveGate",
+    desc: "Komponent instalowany w sieci klienta. Działa jako proxy między OneAgentami a chmurą Dynatrace. Szyfruje ruch (TLS termination), kompresuje dane, redukuje przepustowość i umożliwia pracę w środowiskach bez bezpośredniego dostępu do internetu.",
+    tags: ["Proxy", "TLS termination", "Data routing", "Bandwidth reduction"],
+  },
+  ag2: {
+    title: "Extension Framework",
+    desc: "ActiveGate rozszerza możliwości zbierania danych: urządzenia sieciowe (SNMP v1/v2/v3), JMX dla aplikacji Java, WMI dla Windows, VMware vSphere, bazy danych przez JDBC, custom extensions pisane w Python lub Java.",
+    tags: ["SNMP", "JMX", "WMI", "Custom extensions"],
+  },
+  ag3: {
+    title: "Synthetic Monitoring",
+    desc: "ActiveGate może wykonywać testy syntetyczne z prywatnych lokalizacji w sieci klienta. Browser monitors (Selenium/Puppeteer) i HTTP monitors sprawdzają dostępność i wydajność 24/7 zanim użytkownik zgłosi problem.",
+    tags: ["Browser monitors", "HTTP monitors", "Private locations", "SLA probing"],
+  },
+  ag4: {
+    title: "Cluster ActiveGate (Managed)",
+    desc: "W wersji Dynatrace Managed (on-premise) Cluster ActiveGate zarządza połączeniami do klastra serwerów DT i rozdziela ruch między nodami. Zapewnia High Availability z automatycznym failover i load balancingiem.",
+    tags: ["HA", "Load balancing", "Managed deployment", "Failover"],
+  },
+  i1: {
+    title: "Kubernetes / OpenShift",
+    desc: "OneAgent wdrażany jako DaemonSet — jeden pod na każdym nodzie klastra. Dynatrace Operator zarządza całym cyklem życia agenta przez CRD DynaKube. Automatycznie instrumentuje wszystkie kontenery bez zmian w Dockerfile. Widzi: nody, namespace, pody, deploymenty, HPA.",
+    tags: ["DaemonSet", "DynaKube CRD", "Operator", "Webhook injection"],
+  },
+  i2: {
+    title: "Kontenery / Docker",
+    desc: "OneAgent injektuje się do każdego procesu uruchomionego w kontenerze. Automatycznie wykrywa język (Java, .NET, Node.js, Python, Go, PHP, Ruby) i instrumentuje kod bez rekompilacji. Zbiera container metadata: image, labels, restart count.",
+    tags: ["Auto-inject", "Multi-language", "Container metadata", "Restart tracking"],
+  },
+  i3: {
+    title: "Cloud Integrations",
+    desc: "Dynatrace łączy się z API dostawców chmury: Azure Monitor, AWS CloudWatch, GCP Cloud Monitoring. Pobiera metryki infrastrukturalne i łączy z danymi OneAgenta dla pełnego kontekstu. Obsługuje też Azure DevOps, GitHub Actions dla deployment events.",
+    tags: ["Azure Monitor", "CloudWatch", "GCP", "Deployment events"],
+  },
+  i4: {
+    title: "VM / Bare Metal",
+    desc: "Klasyczna instalacja OneAgenta na serwerze fizycznym lub VM (VMware, Hyper-V, KVM). Monitoruje: CPU, RAM, dysk, sieć, procesy, usługi systemowe. Automatycznie wykrywa technologie (Nginx, Apache, Tomcat, PostgreSQL etc.).",
+    tags: ["Host monitoring", "Process groups", "Network flows", "Auto-discovery"],
+  },
+  i5: {
+    title: "Bazy Danych",
+    desc: "OneAgent automatycznie przechwytuje zapytania SQL bez agenta bazodanowego. Mierzy latency każdego zapytania, wykrywa wolne query, connection pool exhaustion, deadlocki. Widać dokładnie które zapytanie z którego serwisu zajęło zbyt długo i jaki był plan wykonania.",
+    tags: ["Query capture", "Connection pools", "Slow queries", "Execution plans"],
+  },
+  i6: {
+    title: "Sieci & Load Balancery",
+    desc: "Dynatrace Network Monitoring zbiera flow data (NetFlow, sFlow, IPFIX) i koreluje z danymi procesów. Monitoring F5 BIG-IP, Nginx, HAProxy przez ActiveGate Extensions. Wykrywa anomalie w ruchu sieciowym, DNS latency, TCP retransmisje.",
+    tags: ["NetFlow", "DNS monitoring", "F5 BIG-IP", "TCP analysis"],
+  },
+  oa1: {
+    title: "OneAgent — serce systemu",
+    desc: "Jeden plik instalacyjny na hosta. Automatycznie wykrywa i instrumentuje WSZYSTKIE procesy: aplikacje webowe, bazy danych, serwery web, kolejki wiadomości. Wysyła dane co 1 minutę do ActiveGate lub bezpośrednio do SaaS przez szyfrowane HTTPS :443. Narzut: < 1% CPU, ~150MB RAM.",
+    tags: ["Zero-config", "Self-updating", "< 1% overhead", "Single installer"],
+  },
+  oa2: {
+    title: "Real User Monitoring",
+    desc: "Mały skrypt JavaScript (~20KB) wstrzykiwany automatycznie do stron web przez OneAgent na serwerze. Mierzy: Core Web Vitals, błędy JS, rage clicks, user journeys. Session Replay nagrywa całą sesję użytkownika. Wszystko korelowane z tracami backendu (E2E visibility).",
+    tags: ["JS injection", "Session Replay", "Core Web Vitals", "E2E correlation"],
+  },
+  oa3: {
+    title: "Distributed Tracing",
+    desc: "Każde żądanie HTTP/gRPC/messaging dostaje unikalny trace ID propagowany przez wszystkie mikroserwisy (W3C TraceContext, B3). PurePath zbiera 100% żądań bez próbkowania. Dynatrace automatycznie instrumentuje: Spring, Express, Django, ASP.NET, Rails, Go net/http i dziesiątki innych frameworków.",
+    tags: ["W3C TraceContext", "PurePath", "100% capture", "Auto-instrumentation"],
+  },
+  oa4: {
+    title: "CodeModule (PaaS / Serverless)",
+    desc: "Dla środowisk gdzie nie można zainstalować pełnego OneAgenta — lekki moduł dołączany do kontenera lub funkcji serverless. Obsługuje: AWS Lambda, Azure Functions, Google Cloud Run, AWS Fargate. Zapewnia tracing i podstawowe metryki bez DaemonSet.",
+    tags: ["Lambda", "Azure Functions", "Fargate", "Cloud Run"],
+  },
+};
 
-function MetricsView() {
-  const [bars, setBars] = useState(false)
-  useEffect(() => { setTimeout(() => setBars(true), 200) }, [])
-
-  const serviceMetrics = [
-    { label: 'web-frontend', value: 95, color: 'bar-green' },
-    { label: 'api-gateway', value: 87, color: 'bar-teal' },
-    { label: 'auth-service', value: 72, color: 'bar-teal' },
-    { label: 'payment-svc', value: 45, color: 'bar-orange' },
-    { label: 'db-postgres', value: 91, color: 'bar-green' },
-    { label: 'cache-redis', value: 98, color: 'bar-green' },
-  ]
-
-  const infraMetrics = [
-    { label: 'Hosty online', value: '247/250', color: 'green', trend: '↑ 3 nowe', trendClass: 'trend-up' },
-    { label: 'CPU avg', value: '34%', color: '', trend: '↓ 2% vs wcześniej', trendClass: 'trend-up' },
-    { label: 'Memory avg', value: '61%', color: 'yellow', trend: '↑ 5% vs wcześniej', trendClass: 'trend-down' },
-    { label: 'Kontenery', value: '1.2K', color: 'purple', trend: '↑ 48 nowych', trendClass: 'trend-up' },
-    { label: 'Problemy', value: '3', color: 'orange', trend: '↓ było 7', trendClass: 'trend-up' },
-    { label: 'Req/min', value: '84K', color: '', trend: '↑ 12% wzrost', trendClass: 'trend-up' },
-  ]
-
-  return (
-    <div>
-      <h2 className="section-title">Metryki Środowiska</h2>
-      <p className="section-subtitle">
-        Przykładowy widok metryk infrastruktury i usług zbieranych przez Dynatrace.
-        W rzeczywistym środowisku dane są aktualizowane co 1 minutę (metryki) lub w czasie rzeczywistym (traces/logi).
-      </p>
-
-      <div className="metrics-grid">
-        {infraMetrics.map(m => (
-          <div key={m.label} className="metric-card">
-            <div className={`metric-value ${m.color}`}>{m.value}</div>
-            <div className="metric-label">{m.label}</div>
-            <div className={`metric-trend ${m.trendClass}`}>{m.trend}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="card">
-        <div className="card-header">
-          <span className="card-icon">📊</span>
-          <h2>Dostępność usług (Apdex score)</h2>
-        </div>
-        <div className="chart-container">
-          {serviceMetrics.map(m => (
-            <div key={m.label} className="chart-row">
-              <div className="chart-label">
-                <span className="status-dot" style={{
-                  background: m.value > 80 ? '#00d4aa' : m.value > 60 ? '#fbbf24' : '#ff6b35'
-                }} />
-                {m.label}
-              </div>
-              <div className="chart-bar-bg">
-                <div
-                  className={`chart-bar-fill ${m.color}`}
-                  style={{ width: bars ? `${m.value}%` : '0%' }}
-                />
-              </div>
-              <div className="chart-value">{m.value}%</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ marginTop: '24px' }} className="card">
-        <div className="card-header">
-          <span className="card-icon">🔔</span>
-          <h2>Aktywne problemy (Davis AI)</h2>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {[
-            { title: 'Wzrost czasu odpowiedzi — payment-service', impact: 'Wpływ na 234 użytkowników', time: '18 min temu', color: '#ff6b35' },
-            { title: 'Zwiększone zużycie pamięci — node-cluster-3', impact: '3 hosty dotknięte', time: '45 min temu', color: '#fbbf24' },
-            { title: 'Anomalia CPU — api-gateway pod(x2)', impact: 'Potencjalny bottleneck', time: '1h 12 min temu', color: '#fbbf24' },
-          ].map(p => (
-            <div key={p.title} style={{
-              background: '#0d1520', border: `1px solid ${p.color}40`,
-              borderLeft: `3px solid ${p.color}`, borderRadius: '8px', padding: '14px 16px',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            }}>
-              <div>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#e0e6f0', marginBottom: '4px' }}>{p.title}</div>
-                <div style={{ fontSize: '12px', color: '#8a9ab5' }}>{p.impact}</div>
-              </div>
-              <div style={{ fontSize: '11px', color: '#8a9ab5', flexShrink: 0, marginLeft: '16px' }}>{p.time}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function DataFlowView() {
-  const flows = [
-    {
-      title: 'Full-Stack Trace (APM)',
-      description: 'Śledzenie żądania HTTP od przeglądarki przez backend do bazy danych',
-      color: 'teal',
-      steps: [
-        'Użytkownik wysyła request do aplikacji webowej',
-        'RUM agent rejestruje event w przeglądarce',
-        'OneAgent przechwytuje wywołanie na serwerze web',
-        'Trace context propagowany przez mikroserwisy (W3C TraceContext)',
-        'OneAgent instrumentuje wywołania SQL i zewnętrzne API',
-        'Span-y wysyłane przez ActiveGate do Dynatrace',
-        'Davis AI analizuje trace i buduje Service Flow',
-      ],
-    },
-    {
-      title: 'Log Analytics Pipeline',
-      description: 'Ingestion i analiza logów z różnych źródeł',
-      color: 'green',
-      steps: [
-        'OneAgent auto-wykrywa logi aplikacji (stdout, pliki)',
-        'Log Monitoring 2.0: enrichment o DT metadane',
-        'Streaming do Grail przez OTLP lub Log API',
-        'Parsowanie: JSON, CSV, regex patterns',
-        'Indeksowanie w Grail z pełnym kontekstem infrastruktury',
-        'DQL: fetch logs | filter ...  | summarize count()',
-        'Korelacja z metrykami i problemami Davis AI',
-      ],
-    },
-    {
-      title: 'Infrastructure Monitoring',
-      description: 'Zbieranie metryk hostów, kontenerów i usług chmurowych',
-      color: 'purple',
-      steps: [
-        'OneAgent zbiera metryki co 1 min (hosty, procesy)',
-        'Kubernetes API: metryki podów, node, workloads',
-        'Cloud integrations: CloudWatch, Azure Monitor, GCP Monitoring',
-        'Metryki wysyłane przez gRPC do ActiveGate',
-        'Agregacja i kompresja w ActiveGate',
-        'Przechowywanie w Grail z metadanymi Smartscape',
-        'Anomaly detection: Davis AI uczy się baseline',
-      ],
-    },
-    {
-      title: 'Real User Monitoring (RUM)',
-      description: 'Monitoring doświadczenia prawdziwych użytkowników',
-      color: 'teal',
-      steps: [
-        'JavaScript tag wstrzykiwany automatycznie przez OneAgent',
-        'Browser agent zbiera: load time, kliknięcia, błędy JS',
-        'Session Replay: zapis pełnej sesji użytkownika',
-        'Dane wysyłane do beacon endpoint Dynatrace',
-        'Geolokalizacja, ISP, typ urządzenia — automatycznie',
-        'Korelacja z server-side trace (E2E tracing)',
-        'Apdex scoring: Satisfied / Tolerating / Frustrated',
-      ],
-    },
-  ]
-
-  const stepColors = { teal: 'teal', green: 'green', purple: 'purple' }
-
-  return (
-    <div>
-      <h2 className="section-title">Przepływy Danych</h2>
-      <p className="section-subtitle">
-        Szczegółowe kroki przepływu danych dla kluczowych typów monitoringu w Dynatrace —
-        od punktu zbierania danych aż do ich analizy i prezentacji.
-      </p>
-      <div className="flow-container">
-        {flows.map(f => (
-          <div key={f.title} className="flow-item">
-            <h3>{f.title}</h3>
-            <p>{f.description}</p>
-            <div className="flow-steps">
-              {f.steps.map((s, i) => (
-                <div key={i} className="flow-step">
-                  <div className={`step-num ${stepColors[f.color]}`}>{i + 1}</div>
-                  <div className="step-text">{s}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function AIView() {
-  const features = [
-    {
-      icon: '🧠',
-      name: 'Davis AI — Causation Engine',
-      description: 'Davis nie tylko wykrywa anomalie — automatycznie identyfikuje przyczynę źródłową (root cause) problemu, analizując relacje topologiczne z Smartscape i dane historyczne.',
-      tags: ['Root Cause Analysis', 'Causal AI', 'Topology-aware', 'No ML training needed'],
-    },
-    {
-      icon: '🔮',
-      name: 'Predictive AI',
-      description: 'Na podstawie historycznych wzorców Davis AI przewiduje potencjalne problemy zanim się pojawią — np. wyczerpanie dysku, przeciążenie CPU czy degradacja usługi.',
-      tags: ['Forecasting', 'Capacity Planning', 'Anomaly Prediction', 'Baselines'],
-    },
-    {
-      icon: '💬',
-      name: 'Davis CoPilot',
-      description: 'Konwersacyjny asystent AI w Dynatrace — pozwala zadawać pytania w języku naturalnym, generować zapytania DQL, analizować problemy i tworzyć dashboardy opisem.',
-      tags: ['Natural Language', 'DQL Generation', 'Problem Analysis', 'Dashboard Builder'],
-    },
-    {
-      icon: '🔍',
-      name: 'Anomaly Detection',
-      description: 'Automatyczne wykrywanie anomalii bez konfigurowania progów alertów. Davis uczy się normalnego zachowania każdej usługi i alarmuje tylko o prawdziwych problemach.',
-      tags: ['Auto-baselining', 'Seasonal patterns', 'Multi-dimensional', 'Low false positives'],
-    },
-    {
-      icon: '🗺️',
-      name: 'Service Level Objectives',
-      description: 'Definiowanie i monitorowanie SLO bezpośrednio w Dynatrace — od availability po latency i error rate, z burn rate alerting i raportowaniem budżetu błędów.',
-      tags: ['SLO/SLA', 'Error Budget', 'Burn Rate', 'Compliance Reports'],
-    },
-    {
-      icon: '⚡',
-      name: 'Auto-Remediation',
-      description: 'Integracja z systemami workflow (ServiceNow, PagerDuty, Ansible) umożliwia automatyczne podejmowanie działań naprawczych triggered przez problemy wykryte przez Davis.',
-      tags: ['Ansible', 'ServiceNow', 'Webhooks', 'Auto-scaling triggers'],
-    },
-  ]
-
-  return (
-    <div>
-      <h2 className="section-title">Davis AI — Mózg Dynatrace</h2>
-      <p className="section-subtitle">
-        Davis AI to silnik sztucznej inteligencji Dynatrace, który przetwarza miliardy zdarzeń dziennie,
-        automatycznie koreluje anomalie, identyfikuje przyczyny źródłowe i proponuje rozwiązania —
-        bez konieczności manualnej konfiguracji reguł czy modeli ML.
-      </p>
-
-      <div style={{ marginBottom: '24px' }} className="card">
-        <div className="card-header">
-          <span className="card-icon">🎯</span>
-          <h2>Jak Davis AI analizuje problem</h2>
-        </div>
-        <div style={{ display: 'flex', gap: '0', alignItems: 'center', overflowX: 'auto', paddingBottom: '8px' }}>
-          {[
-            { label: 'Anomalia wykryta', sub: 'Odchylenie od baseline', icon: '📈' },
-            null,
-            { label: 'Kontekst topologii', sub: 'Smartscape: zależności', icon: '🗺️' },
-            null,
-            { label: 'Korelacja zdarzeń', sub: 'Deployment, config change', icon: '🔗' },
-            null,
-            { label: 'Root Cause', sub: 'Jedna przyczyna, wiele objawów', icon: '🎯' },
-            null,
-            { label: 'Problem ticket', sub: 'Grupuje powiązane alerty', icon: '🎫' },
-          ].map((s, i) => (
-            s === null
-              ? <div key={i} style={{ color: '#00b9f1', fontSize: '24px', padding: '0 8px', flexShrink: 0 }}>→</div>
-              : <div key={i} style={{
-                  background: '#0d1520', border: '1px solid #1e2d40', borderRadius: '8px',
-                  padding: '14px 16px', textAlign: 'center', minWidth: '120px', flexShrink: 0,
-                }}>
-                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>{s.icon}</div>
-                  <div style={{ fontSize: '12px', fontWeight: 600, color: '#e0e6f0', marginBottom: '2px' }}>{s.label}</div>
-                  <div style={{ fontSize: '11px', color: '#8a9ab5' }}>{s.sub}</div>
-                </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="ai-grid">
-        {features.map(f => (
-          <div key={f.name} className="ai-card">
-            <div className="ai-card-header">
-              <span className="ai-icon">{f.icon}</span>
-              <h3>{f.name}</h3>
-            </div>
-            <p>{f.description}</p>
-            <div className="ai-features">
-              {f.tags.map(t => <span key={t} className="ai-tag">{t}</span>)}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const VIEWS = {
-  architecture: ArchitectureView,
-  components: ComponentsView,
-  metrics: MetricsView,
-  dataflow: DataFlowView,
-  ai: AIView,
-}
+const incidentFlow = [
+  { icon: "👤", label: "Użytkownik\nzgłasza wolną\naplikację", color: "#e94560" },
+  { icon: "⚡", label: "OneAgent\nzbiera metryki\ni traces", color: "#ef476f" },
+  { icon: "🔀", label: "ActiveGate\nrouting\n+ szyfrowanie", color: "#06d6a0" },
+  { icon: "🧠", label: "Davis AI\nroot cause\nanalysis", color: "#00b4d8" },
+  { icon: "🔔", label: "Alert do\nteamu Ops\n(< 2 min)", color: "#ffd166" },
+  { icon: "🔧", label: "Naprawa\nz pełnym\nkontekstem", color: "#06d6a0" },
+];
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('architecture')
-  const ActiveView = VIEWS[activeTab]
+  const [selected, setSelected] = useState(null);
+  const [hoveredLayer, setHoveredLayer] = useState(null);
+
+  const detail = selected ? details[selected] : null;
+  const allItems = data.layers.flatMap((l) => l.items);
 
   return (
-    <div className="app">
-      <header className="header">
-        <div className="header-logo">
-          <div className="logo-icon">📡</div>
-          <h1>Dynatrace Monitoring</h1>
+    <div style={{
+      fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+      background: "linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #0a0a1a 100%)",
+      minHeight: "100vh",
+      padding: "24px",
+      color: "#e2e8f0",
+    }}>
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{
+          display: "inline-block",
+          background: "linear-gradient(90deg, #00b4d8, #06d6a0)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontSize: 26,
+          fontWeight: 900,
+          letterSpacing: 3,
+          marginBottom: 4,
+        }}>
+          DYNATRACE MONITORING ARCHITECTURE
         </div>
-        <div className="header-badge">INFRASTRUKTURA MONITORINGU</div>
-      </header>
+        <div style={{ color: "#64748b", fontSize: 12, letterSpacing: 2 }}>
+          KLIKNIJ dowolny komponent aby zobaczyć szczegóły
+        </div>
+      </div>
 
-      <nav className="nav">
-        {TABS.map(t => (
-          <button
-            key={t.id}
-            className={`nav-btn ${activeTab === t.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
+      <div style={{ display: "flex", gap: 20, alignItems: "flex-start", maxWidth: 1200, margin: "0 auto" }}>
 
-      <main className="main">
-        <ActiveView />
-      </main>
+        {/* LEFT – diagram warstw */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 0 }}>
+          {data.layers.map((layer, li) => (
+            <div key={layer.id}>
+              <div
+                onMouseEnter={() => setHoveredLayer(layer.id)}
+                onMouseLeave={() => setHoveredLayer(null)}
+                style={{
+                  border: `1px solid ${layer.accent}44`,
+                  borderLeft: `3px solid ${layer.accent}`,
+                  borderRadius:
+                    li === 0 ? "10px 10px 0 0"
+                    : li === data.layers.length - 1 ? "0 0 10px 10px"
+                    : "0",
+                  background: hoveredLayer === layer.id ? `${layer.color}dd` : `${layer.color}99`,
+                  padding: "14px 16px",
+                  transition: "all 0.2s",
+                }}
+              >
+                <div style={{
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: 2,
+                  color: layer.accent,
+                  marginBottom: 10,
+                  opacity: 0.9,
+                }}>
+                  {layer.label}
+                </div>
+
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {layer.items.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelected(selected === item.id ? null : item.id)}
+                      style={{
+                        background: selected === item.id
+                          ? `${layer.accent}22`
+                          : "rgba(255,255,255,0.04)",
+                        border: `1px solid ${selected === item.id ? layer.accent : layer.accent + "44"}`,
+                        borderRadius: 8,
+                        padding: "10px 14px",
+                        cursor: "pointer",
+                        color: "#e2e8f0",
+                        textAlign: "left",
+                        transition: "all 0.15s",
+                        minWidth: 140,
+                        flex: "1 1 140px",
+                        transform: selected === item.id ? "translateY(-1px)" : "none",
+                        boxShadow: selected === item.id ? `0 4px 16px ${layer.accent}33` : "none",
+                      }}
+                    >
+                      <div style={{ fontSize: 20, marginBottom: 4 }}>{item.icon}</div>
+                      <div style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: selected === item.id ? layer.accent : "#e2e8f0",
+                        marginBottom: 2,
+                      }}>
+                        {item.label}
+                      </div>
+                      <div style={{ fontSize: 10, color: "#64748b", lineHeight: 1.3 }}>{item.sub}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Strzałka między warstwami */}
+              {li < data.layers.length - 1 && (
+                <div style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 28,
+                  background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.02), transparent)",
+                  position: "relative",
+                }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div style={{ width: 1, height: 8, background: "linear-gradient(180deg, #334155, #00b4d8)" }} />
+                    <div style={{ color: "#00b4d8", fontSize: 12, lineHeight: 1 }}>▼</div>
+                  </div>
+                  <div style={{
+                    position: "absolute",
+                    right: 80,
+                    fontSize: 9,
+                    color: "#475569",
+                    letterSpacing: 1,
+                    fontStyle: "italic",
+                  }}>
+                    {li === 0 && "dane UX → AI analiza"}
+                    {li === 1 && "konfiguracja ← → zbieranie danych"}
+                    {li === 2 && "routing & proxy"}
+                    {li === 3 && "auto-instrumentacja procesów"}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT – panel szczegółów */}
+        <div style={{ width: 300, flexShrink: 0, position: "sticky", top: 24 }}>
+          {detail ? (
+            <div style={{
+              background: "rgba(15,52,96,0.6)",
+              border: "1px solid #00b4d844",
+              borderTop: "3px solid #00b4d8",
+              borderRadius: 10,
+              padding: 18,
+              animation: "fadeIn 0.2s ease",
+            }}>
+              <div style={{ fontSize: 22, marginBottom: 8 }}>
+                {allItems.find((i) => i.id === selected)?.icon}
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#00b4d8", marginBottom: 10 }}>
+                {detail.title}
+              </div>
+              <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.6, marginBottom: 14 }}>
+                {detail.desc}
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {detail.tags.map((tag) => (
+                  <span key={tag} style={{
+                    background: "rgba(0,180,216,0.12)",
+                    border: "1px solid rgba(0,180,216,0.3)",
+                    borderRadius: 4,
+                    padding: "2px 8px",
+                    fontSize: 10,
+                    color: "#00b4d8",
+                    letterSpacing: 0.5,
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px dashed #334155",
+              borderRadius: 10,
+              padding: 18,
+              textAlign: "center",
+            }}>
+              <div style={{ fontSize: 32, marginBottom: 10, opacity: 0.3 }}>👆</div>
+              <div style={{ fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
+                Kliknij dowolny komponent na diagramie aby zobaczyć opis i tagi techniczne
+              </div>
+            </div>
+          )}
+
+          {/* Legenda */}
+          <div style={{
+            marginTop: 16,
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid #1e293b",
+            borderRadius: 10,
+            padding: 14,
+          }}>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 10 }}>
+              LEGENDA WARSTW
+            </div>
+            {data.layers.map((l) => (
+              <div key={l.id} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: l.accent, flexShrink: 0 }} />
+                <div style={{ fontSize: 10, color: "#64748b" }}>{l.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Kluczowa różnica */}
+          <div style={{
+            marginTop: 16,
+            background: "rgba(6,214,160,0.05)",
+            border: "1px solid rgba(6,214,160,0.2)",
+            borderRadius: 10,
+            padding: 14,
+          }}>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: "#06d6a0", marginBottom: 8 }}>
+              💡 KLUCZOWA RÓŻNICA
+            </div>
+            <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
+              <span style={{ color: "#06d6a0", fontWeight: 700 }}>Davis AI</span> automatycznie
+              koreluje zdarzenia i wskazuje{" "}
+              <span style={{ color: "#ffd166" }}>jedną przyczynę</span> zamiast setek alertów.
+              <br /><br />
+              Prometheus wymaga ręcznego konfigurowania reguł. Dynatrace robi to samo{" "}
+              <span style={{ color: "#06d6a0" }}>automatycznie</span>.
+            </div>
+          </div>
+
+          {/* Statystyki */}
+          <div style={{
+            marginTop: 16,
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid #1e293b",
+            borderRadius: 10,
+            padding: 14,
+          }}>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 10 }}>
+              DYNATRACE W LICZBACH
+            </div>
+            {[
+              { val: "100%", label: "trace capture (bez próbkowania)", color: "#00b4d8" },
+              { val: "< 1%", label: "narzut CPU OneAgenta", color: "#06d6a0" },
+              { val: "~2min", label: "średni czas do wykrycia problemu", color: "#ffd166" },
+              { val: "600+", label: "automatycznie wykrywanych technologii", color: "#ef476f" },
+            ].map((s) => (
+              <div key={s.label} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "baseline" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: s.color, flexShrink: 0, minWidth: 52 }}>
+                  {s.val}
+                </div>
+                <div style={{ fontSize: 10, color: "#64748b", lineHeight: 1.4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Przepływ incydentu */}
+      <div style={{
+        maxWidth: 1200,
+        margin: "20px auto 0",
+        padding: "16px",
+        background: "rgba(255,255,255,0.02)",
+        borderRadius: 10,
+        border: "1px solid #1e293b",
+      }}>
+        <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 12 }}>
+          PRZEPŁYW DANYCH — TYPOWY INCYDENT
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+          {incidentFlow.map((step, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{
+                background: `${step.color}11`,
+                border: `1px solid ${step.color}44`,
+                borderRadius: 8,
+                padding: "8px 12px",
+                textAlign: "center",
+                minWidth: 95,
+              }}>
+                <div style={{ fontSize: 18 }}>{step.icon}</div>
+                <div style={{
+                  fontSize: 9,
+                  color: step.color,
+                  marginTop: 4,
+                  whiteSpace: "pre-line",
+                  lineHeight: 1.4,
+                }}>
+                  {step.label}
+                </div>
+              </div>
+              {i < incidentFlow.length - 1 && (
+                <div style={{ color: "#334155", fontSize: 14 }}>→</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        button:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 6px 20px rgba(0,180,216,0.2) !important;
+          border-color: rgba(0,180,216,0.6) !important;
+        }
+      `}</style>
     </div>
-  )
+  );
 }
