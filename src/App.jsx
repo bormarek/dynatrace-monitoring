@@ -3,196 +3,222 @@ import { useState } from "react";
 const data = {
   layers: [
     {
-      id: "business",
-      label: "WARSTWA BIZNESOWA",
+      id: "developer",
+      label: "DEWELOPER / ZESPÓŁ",
       color: "#1a1a2e",
       accent: "#e94560",
       items: [
-        { id: "b1", icon: "👤", label: "Użytkownicy końcowi", sub: "Aplikacje web / mobile / IoT" },
-        { id: "b2", icon: "📊", label: "Dashboardy Dynatrace", sub: "Davis AI • Alerting • Reports" },
-        { id: "b3", icon: "🔔", label: "Alerty & Eskalacje", sub: "Email • PagerDuty • Slack • ServiceNow" },
-        { id: "b4", icon: "📋", label: "SLO / SLA Reporting", sub: "Error budget • Compliance • Trendy" },
+        { id: "dev1", icon: "💻", label: "Kod aplikacji", sub: "Dockerfile • .dockerignore • src/" },
+        { id: "dev2", icon: "📦", label: "Helm Chart", sub: "Chart.yaml • values.yaml • templates/" },
+        { id: "dev3", icon: "🔀", label: "Git Repository", sub: "GitHub • GitLab • Bitbucket" },
+        { id: "dev4", icon: "🏗️", label: "CI Pipeline", sub: "GitHub Actions • GitLab CI • Jenkins" },
       ],
     },
     {
-      id: "platform",
-      label: "DYNATRACE PLATFORM (SaaS / Managed)",
-      color: "#0f3460",
-      accent: "#00b4d8",
-      items: [
-        { id: "p1", icon: "🧠", label: "Davis AI Engine", sub: "Automatyczny root cause analysis" },
-        { id: "p2", icon: "🗺️", label: "SmartScape Topology", sub: "Auto-wykrywanie zależności 4D" },
-        { id: "p3", icon: "📈", label: "Metrics & Traces", sub: "Full-stack observability / PurePath" },
-        { id: "p4", icon: "📝", label: "Log Management (Grail)", sub: "Centralizacja logów • DQL" },
-        { id: "p5", icon: "💬", label: "Davis CoPilot", sub: "AI asystent • Natural language queries" },
-      ],
-    },
-    {
-      id: "activegate",
-      label: "ACTIVEGATE (On-premise / Cloud)",
+      id: "registry",
+      label: "ARTEFAKTY — OBRAZY & CHARTY",
       color: "#16213e",
+      accent: "#a78bfa",
+      items: [
+        { id: "reg1", icon: "🐳", label: "Container Registry", sub: "Docker Hub • ECR • ACR • GCR" },
+        { id: "reg2", icon: "⛵", label: "Helm Chart Repository", sub: "Artifact Hub • Harbor • OCI registry" },
+        { id: "reg3", icon: "🔒", label: "Image Scanning", sub: "Trivy • Snyk • Grype • Cosign" },
+      ],
+    },
+    {
+      id: "argocd",
+      label: "ARGOCD — GITOPS CONTROLLER",
+      color: "#0f3460",
+      accent: "#f97316",
+      items: [
+        { id: "argo1", icon: "🔄", label: "Application Controller", sub: "Reconciliation loop • Sync status" },
+        { id: "argo2", icon: "📋", label: "Repo Server", sub: "Git clone • Helm template • Kustomize" },
+        { id: "argo3", icon: "🌐", label: "API Server", sub: "Web UI • CLI • RBAC • SSO (OIDC)" },
+        { id: "argo4", icon: "🔔", label: "Notifications", sub: "Slack • Email • PagerDuty • Webhooks" },
+        { id: "argo5", icon: "🖼️", label: "Image Updater", sub: "Auto-update obrazów w Git • semver" },
+      ],
+    },
+    {
+      id: "helm",
+      label: "HELM — PACKAGE MANAGER DLA K8S",
+      color: "#1b2838",
       accent: "#06d6a0",
       items: [
-        { id: "ag1", icon: "🔀", label: "Environment ActiveGate", sub: "Proxy • Routing • TLS termination" },
-        { id: "ag2", icon: "🔌", label: "Extension Framework", sub: "JMX • SNMP • WMI • Custom plugins" },
-        { id: "ag3", icon: "🔬", label: "Synthetic Execution", sub: "Browser & HTTP testy z prywatnych lokacji" },
-        { id: "ag4", icon: "🔐", label: "Cluster ActiveGate", sub: "Managed deployment • HA load balancing" },
+        { id: "helm1", icon: "📜", label: "Chart Templates", sub: "Go templates • Values • Helpers" },
+        { id: "helm2", icon: "⚙️", label: "Values Override", sub: "values.yaml • -f custom.yaml • --set" },
+        { id: "helm3", icon: "🔢", label: "Release Management", sub: "helm install • upgrade • rollback" },
+        { id: "helm4", icon: "🔗", label: "Chart Dependencies", sub: "Chart.lock • helm dependency update" },
       ],
     },
     {
-      id: "infra",
-      label: "INFRASTRUKTURA MONITOROWANA",
+      id: "k8s-control",
+      label: "KUBERNETES — CONTROL PLANE",
       color: "#0d1b2a",
+      accent: "#00b4d8",
+      items: [
+        { id: "k8s1", icon: "🖥️", label: "API Server", sub: "kube-apiserver • REST • admission webhooks" },
+        { id: "k8s2", icon: "💾", label: "etcd", sub: "Distributed KV store • stan klastra" },
+        { id: "k8s3", icon: "📅", label: "Scheduler", sub: "Przydzielanie podów do nodów" },
+        { id: "k8s4", icon: "🔁", label: "Controller Manager", sub: "ReplicaSet • Deployment • Job • HPA" },
+        { id: "k8s5", icon: "☁️", label: "Cloud Controller", sub: "LB • PersistentVolume • Node lifecycle" },
+      ],
+    },
+    {
+      id: "k8s-worker",
+      label: "KUBERNETES — WORKER NODES",
+      color: "#0a1628",
       accent: "#ffd166",
       items: [
-        { id: "i1", icon: "☸️", label: "Kubernetes / OpenShift", sub: "OneAgent DaemonSet • Operator CRD" },
-        { id: "i2", icon: "🐳", label: "Kontenery / Docker", sub: "Auto-instrumentacja procesów" },
-        { id: "i3", icon: "☁️", label: "Azure / AWS / GCP", sub: "Cloud integrations • Native API" },
-        { id: "i4", icon: "🖥️", label: "VM / Bare Metal", sub: "OneAgent host monitoring" },
-        { id: "i5", icon: "🗄️", label: "Bazy Danych", sub: "PostgreSQL • Oracle • MySQL • MSSQL" },
-        { id: "i6", icon: "🌐", label: "Sieci & Load Balancery", sub: "Network flows • F5 • Nginx • HAProxy" },
-      ],
-    },
-    {
-      id: "oneagent",
-      label: "ONEAGENT — AUTOMATYCZNA INSTRUMENTACJA",
-      color: "#1b2838",
-      accent: "#ef476f",
-      items: [
-        { id: "oa1", icon: "⚡", label: "OneAgent Process", sub: "Auto-inject • Zero config • Self-updating" },
-        { id: "oa2", icon: "📡", label: "Real User Monitoring", sub: "JavaScript agent w przeglądarce" },
-        { id: "oa3", icon: "🔗", label: "Distributed Tracing", sub: "OpenTelemetry • W3C TraceContext • PurePath" },
-        { id: "oa4", icon: "📦", label: "CodeModule (PaaS)", sub: "Lambda • Azure Functions • Fargate" },
+        { id: "wk1", icon: "🤖", label: "kubelet", sub: "Uruchamia pody • CRI • health checks" },
+        { id: "wk2", icon: "🌐", label: "kube-proxy", sub: "iptables / IPVS • Service networking" },
+        { id: "wk3", icon: "📦", label: "Pod / Container", sub: "Aplikacja • sidecar • init container" },
+        { id: "wk4", icon: "🗄️", label: "Persistent Volume", sub: "PVC • StorageClass • CSI driver" },
+        { id: "wk5", icon: "🔌", label: "CNI Plugin", sub: "Calico • Cilium • Flannel • Weave" },
       ],
     },
   ],
 };
 
 const details = {
-  b1: {
-    title: "Użytkownicy końcowi",
-    desc: "Dynatrace śledzi doświadczenie użytkownika (UX) przez Real User Monitoring. Każda akcja w przeglądarce lub aplikacji mobilnej jest rejestrowana jako 'user session' z pełnym kontekstem backendu.",
-    tags: ["RUM", "Session Replay", "Apdex Score", "Mobile RUM"],
+  dev1: {
+    title: "Kod aplikacji",
+    desc: "Deweloper pisze kod i Dockerfile definiujący obraz kontenera. Dobry Dockerfile używa multi-stage build — osobny etap do kompilacji, minimalny obraz końcowy (distroless/alpine). Zmiana kodu trafia do gita i triggeruje pipeline CI.",
+    tags: ["Dockerfile", "Multi-stage build", "distroless", ".dockerignore"],
   },
-  b2: {
-    title: "Dashboardy Dynatrace",
-    desc: "Główny interfejs SaaS dostępny przez przeglądarkę. Davis AI automatycznie grupuje powiązane problemy i wskazuje root cause bez ręcznej analizy. Możliwość tworzenia custom dashboardów przez Davis CoPilot (opis w języku naturalnym).",
-    tags: ["SaaS Console", "Davis AI", "Custom Dashboards", "DQL Notebooks"],
+  dev2: {
+    title: "Helm Chart",
+    desc: "Helm Chart to paczka plików YAML opisujących zasoby Kubernetes. Chart.yaml zawiera metadane, values.yaml domyślne wartości, a katalog templates/ szablony Go. Jeden chart może obsługiwać wiele środowisk przez podmianę values.",
+    tags: ["Chart.yaml", "values.yaml", "templates/", "Go templates"],
   },
-  b3: {
-    title: "Alerty & Eskalacje",
-    desc: "Dynatrace wysyła powiadomienia przez wbudowane integracje: email, Slack, PagerDuty, ServiceNow, OpsGenie, Microsoft Teams. Można ustawiać profile alertów, tłumienie, eskalacje i on-call routing.",
-    tags: ["Alerting Profiles", "Integrations", "On-call routing", "Auto-remediation"],
+  dev3: {
+    title: "Git Repository",
+    desc: "W GitOps Git jest jedynym źródłem prawdy (single source of truth). Każda zmiana infrastruktury lub konfiguracji aplikacji przechodzi przez Pull Request z code review. ArgoCD obserwuje repo i synchronizuje klaster ze stanem w gicie.",
+    tags: ["Single source of truth", "Pull Request", "Code review", "Audit log"],
   },
-  b4: {
-    title: "SLO / SLA Reporting",
-    desc: "Definiowanie Service Level Objectives bezpośrednio w Dynatrace. Monitoring error budget, burn rate alerting i automatyczne raporty compliance. Davis AI wskazuje jakie zdarzenia wpłynęły na SLO.",
-    tags: ["SLO", "Error Budget", "Burn Rate", "Compliance"],
+  dev4: {
+    title: "CI Pipeline",
+    desc: "Pipeline CI odpowiada za: uruchomienie testów, zbudowanie obrazu Docker (docker build), otagowanie wersją (git SHA lub semver), skanowanie bezpieczeństwa i wypchnięcie do rejestru. CI NIE deployuje — to rola ArgoCD (rozdzielenie CI od CD).",
+    tags: ["docker build", "docker push", "Tests", "CI/CD separation"],
   },
-  p1: {
-    title: "Davis AI Engine",
-    desc: "Kluczowa różnica Dynatrace vs inne narzędzia. Davis automatycznie koreluje tysiące zdarzeń, eliminuje false positives i wskazuje JEDNĄ przyczynę problemu zamiast setek alertów. Używa topologii Smartscape jako kontekstu przyczynowego — nie potrzebuje ręcznego trenowania modeli ML.",
-    tags: ["Causation AI", "Anomaly Detection", "Auto Baseline", "Zero configuration"],
+  reg1: {
+    title: "Container Registry",
+    desc: "Rejestr obrazów kontenerów przechowuje zbudowane obrazy z tagami. Dobre praktyki: immutable tags (nigdy nie nadpisuj :latest w produkcji), używaj SHA256 digest jako referencji w ArgoCD dla deterministycznych deploymentów.",
+    tags: ["Immutable tags", "SHA256 digest", "ECR", "Harbor"],
   },
-  p2: {
-    title: "SmartScape Topology",
-    desc: "Automatyczna 4-wymiarowa mapa zależności całego środowiska: datacenter → hosty → procesy → usługi → aplikacje. Aktualizuje się w czasie rzeczywistym. Davis AI używa SmartScape do określenia wpływu anomalii na resztę środowiska.",
-    tags: ["Auto-discovery", "4D Topology", "Real-time", "Dependency Map"],
+  reg2: {
+    title: "Helm Chart Repository",
+    desc: "Repozytorium chartów Helm — klasycznie serwer HTTP z plikiem index.yaml, lub nowoczesnie przez OCI registry (ten sam co obrazy Docker). Artifact Hub to publiczny katalog chartów. Harbor łączy rejestr obrazów i chartów w jednym.",
+    tags: ["OCI registry", "index.yaml", "Artifact Hub", "Harbor"],
   },
-  p3: {
-    title: "Metrics & Distributed Traces",
-    desc: "PurePath to technologia Dynatrace śledząca każde żądanie end-to-end — od kliknięcia użytkownika przez wszystkie mikroserwisy aż do bazy danych. Pełna widoczność BEZ próbkowania (100% trace capture). Kompatybilny z OpenTelemetry.",
-    tags: ["PurePath", "Full-stack", "OpenTelemetry", "OTLP ingest"],
+  reg3: {
+    title: "Image Scanning & Signing",
+    desc: "Przed deploymentem obrazy powinny być skanowane pod kątem podatności CVE. Trivy i Grype analizują warstwy obrazu. Cosign (projekt Sigstore) umożliwia podpisywanie obrazów — ArgoCD może weryfikować podpisy przed deployem.",
+    tags: ["CVE scanning", "Trivy", "Cosign", "Supply chain security"],
   },
-  p4: {
-    title: "Log Management — Grail",
-    desc: "Grail to data lakehouse nowej generacji łączący logi, metryki i traces w jednym storage. Dynatrace automatycznie koreluje logi z metrykami i trace'ami. DQL (Dynatrace Query Language) umożliwia zaawansowaną analizę bez limitu retencji.",
-    tags: ["Grail", "DQL", "Log correlation", "Unlimited retention"],
+  argo1: {
+    title: "Application Controller",
+    desc: "Serce ArgoCD — kontroler uruchomiony jako StatefulSet, który w pętli porównuje żądany stan (git) z aktualnym stanem klastra. Gdy wykryje drift (różnicę), może automatycznie zsynchronizować (auto-sync) lub tylko poinformować. Działa przez Kubernetes informers.",
+    tags: ["Reconciliation loop", "Drift detection", "Auto-sync", "Self-healing"],
   },
-  p5: {
-    title: "Davis CoPilot",
-    desc: "Konwersacyjny asystent AI wbudowany w Dynatrace. Pozwala zadawać pytania po polsku lub angielsku, automatycznie generuje zapytania DQL, tworzy dashboardy z opisu, analizuje root cause i sugeruje rozwiązania. Oparty na LLM z kontekstem danych observability.",
-    tags: ["Natural Language", "DQL Generation", "AI analysis", "Dashboard builder"],
+  argo2: {
+    title: "Repo Server",
+    desc: "Bezstanowy serwer odpowiedzialny za klonowanie repozytoriów Git i generowanie manifestów. Obsługuje: plain YAML, Helm (helm template), Kustomize, Jsonnet. Przetwarza templates po stronie ArgoCD — do klastra trafiają gotowe manifesty YAML.",
+    tags: ["helm template", "Kustomize", "Jsonnet", "Git clone"],
   },
-  ag1: {
-    title: "Environment ActiveGate",
-    desc: "Komponent instalowany w sieci klienta. Działa jako proxy między OneAgentami a chmurą Dynatrace. Szyfruje ruch (TLS termination), kompresuje dane, redukuje przepustowość i umożliwia pracę w środowiskach bez bezpośredniego dostępu do internetu.",
-    tags: ["Proxy", "TLS termination", "Data routing", "Bandwidth reduction"],
+  argo3: {
+    title: "API Server",
+    desc: "Udostępnia REST/gRPC API dla Web UI i CLI (argocd). Obsługuje autentykację przez SSO (OIDC/SAML — Dex jako broker) i RBAC na poziomie aplikacji i projektu. Projects w ArgoCD izolują zespoły i ograniczają do których klastrów/namespace'ów mają dostęp.",
+    tags: ["Web UI", "argocd CLI", "OIDC/SAML", "RBAC Projects"],
   },
-  ag2: {
-    title: "Extension Framework",
-    desc: "ActiveGate rozszerza możliwości zbierania danych: urządzenia sieciowe (SNMP v1/v2/v3), JMX dla aplikacji Java, WMI dla Windows, VMware vSphere, bazy danych przez JDBC, custom extensions pisane w Python lub Java.",
-    tags: ["SNMP", "JMX", "WMI", "Custom extensions"],
+  argo4: {
+    title: "ArgoCD Notifications",
+    desc: "Osobny kontroler wysyłający powiadomienia o zdarzeniach: sync started/failed/succeeded, degraded application, health changed. Konfigurowane przez ConfigMap z triggerami i szablonami. Obsługuje Slack, email, Teams, PagerDuty, webhooks.",
+    tags: ["Triggers", "Templates", "Slack", "Webhooks"],
   },
-  ag3: {
-    title: "Synthetic Monitoring",
-    desc: "ActiveGate może wykonywać testy syntetyczne z prywatnych lokalizacji w sieci klienta. Browser monitors (Selenium/Puppeteer) i HTTP monitors sprawdzają dostępność i wydajność 24/7 zanim użytkownik zgłosi problem.",
-    tags: ["Browser monitors", "HTTP monitors", "Private locations", "SLA probing"],
+  argo5: {
+    title: "Argo CD Image Updater",
+    desc: "Narzędzie które monitoruje rejestr obrazów i automatycznie aktualizuje tag obrazu w repozytorium Git (write-back). Obsługuje strategie: latest, semver, digest. Commituje zmiany bezpośrednio do gita lub przez annotations na Application.",
+    tags: ["Auto image update", "semver strategy", "Git write-back", "Registry polling"],
   },
-  ag4: {
-    title: "Cluster ActiveGate (Managed)",
-    desc: "W wersji Dynatrace Managed (on-premise) Cluster ActiveGate zarządza połączeniami do klastra serwerów DT i rozdziela ruch między nodami. Zapewnia High Availability z automatycznym failover i load balancingiem.",
-    tags: ["HA", "Load balancing", "Managed deployment", "Failover"],
+  helm1: {
+    title: "Chart Templates",
+    desc: "Szablony używają Go template syntax z funkcjami Sprig. Plik _helpers.tpl zawiera reużywalne fragmenty (named templates). Typowy chart zawiera szablony dla: Deployment, Service, Ingress, ConfigMap, ServiceAccount, HPA. Funkcja `helm template` renderuje szablony lokalnie bez instalowania.",
+    tags: ["Go templates", "Sprig functions", "_helpers.tpl", "helm template"],
   },
-  i1: {
-    title: "Kubernetes / OpenShift",
-    desc: "OneAgent wdrażany jako DaemonSet — jeden pod na każdym nodzie klastra. Dynatrace Operator zarządza całym cyklem życia agenta przez CRD DynaKube. Automatycznie instrumentuje wszystkie kontenery bez zmian w Dockerfile. Widzi: nody, namespace, pody, deploymenty, HPA.",
-    tags: ["DaemonSet", "DynaKube CRD", "Operator", "Webhook injection"],
+  helm2: {
+    title: "Values Override",
+    desc: "Hierarchia wartości w Helm: domyślne values.yaml w charcie → -f prod-values.yaml → --set key=value (najwyższy priorytet). W ArgoCD values przekazuje się przez spec.source.helm.values lub valuesObject. Nigdy nie commituj sekretów w values — używaj Sealed Secrets lub External Secrets.",
+    tags: ["values.yaml", "-f override", "--set", "ArgoCD valuesObject"],
   },
-  i2: {
-    title: "Kontenery / Docker",
-    desc: "OneAgent injektuje się do każdego procesu uruchomionego w kontenerze. Automatycznie wykrywa język (Java, .NET, Node.js, Python, Go, PHP, Ruby) i instrumentuje kod bez rekompilacji. Zbiera container metadata: image, labels, restart count.",
-    tags: ["Auto-inject", "Multi-language", "Container metadata", "Restart tracking"],
+  helm3: {
+    title: "Release Management",
+    desc: "Helm przechowuje historię releases jako Secrets w namespace klastra. helm upgrade --install to idiomatyczne polecenie (install jeśli nie istnieje, upgrade jeśli istnieje). helm rollback <release> <revision> cofa do poprzedniej wersji. helm history pokazuje pełną historię.",
+    tags: ["helm upgrade --install", "helm rollback", "helm history", "Release secrets"],
   },
-  i3: {
-    title: "Cloud Integrations",
-    desc: "Dynatrace łączy się z API dostawców chmury: Azure Monitor, AWS CloudWatch, GCP Cloud Monitoring. Pobiera metryki infrastrukturalne i łączy z danymi OneAgenta dla pełnego kontekstu. Obsługuje też Azure DevOps, GitHub Actions dla deployment events.",
-    tags: ["Azure Monitor", "CloudWatch", "GCP", "Deployment events"],
+  helm4: {
+    title: "Chart Dependencies",
+    desc: "Chart może zależeć od innych chartów (np. aplikacja + PostgreSQL + Redis). Zależności definiuje się w Chart.yaml pod kluczem dependencies. helm dependency update pobiera je do charts/ i tworzy Chart.lock z dokładnymi wersjami. W ArgoCD multiple sources pozwala łączyć charty.",
+    tags: ["dependencies", "Chart.lock", "helm dep update", "Subchart"],
   },
-  i4: {
-    title: "VM / Bare Metal",
-    desc: "Klasyczna instalacja OneAgenta na serwerze fizycznym lub VM (VMware, Hyper-V, KVM). Monitoruje: CPU, RAM, dysk, sieć, procesy, usługi systemowe. Automatycznie wykrywa technologie (Nginx, Apache, Tomcat, PostgreSQL etc.).",
-    tags: ["Host monitoring", "Process groups", "Network flows", "Auto-discovery"],
+  k8s1: {
+    title: "kube-apiserver",
+    desc: "Jedyny punkt wejścia do klastra — wszystko (kubectl, kontrolery, kubelet) komunikuje się wyłącznie przez API server. Każde żądanie przechodzi przez: autentykację → autoryzację (RBAC) → admission webhooks (mutating → validating) → zapis do etcd. API jest deklaratywne i RESTful.",
+    tags: ["RESTful API", "RBAC", "Admission webhooks", "etcd"],
   },
-  i5: {
-    title: "Bazy Danych",
-    desc: "OneAgent automatycznie przechwytuje zapytania SQL bez agenta bazodanowego. Mierzy latency każdego zapytania, wykrywa wolne query, connection pool exhaustion, deadlocki. Widać dokładnie które zapytanie z którego serwisu zajęło zbyt długo i jaki był plan wykonania.",
-    tags: ["Query capture", "Connection pools", "Slow queries", "Execution plans"],
+  k8s2: {
+    title: "etcd",
+    desc: "Rozproszony key-value store będący jedynym miejscem przechowywania stanu klastra. Wszystkie obiekty K8s (Pods, Services, Secrets...) żyją w etcd. W produkcji etcd wymaga osobnego klastra (3 lub 5 nodów) z regularnymi backupami — utrata etcd = utrata klastra.",
+    tags: ["Raft consensus", "Backup critical", "KV store", "TLS everywhere"],
   },
-  i6: {
-    title: "Sieci & Load Balancery",
-    desc: "Dynatrace Network Monitoring zbiera flow data (NetFlow, sFlow, IPFIX) i koreluje z danymi procesów. Monitoring F5 BIG-IP, Nginx, HAProxy przez ActiveGate Extensions. Wykrywa anomalie w ruchu sieciowym, DNS latency, TCP retransmisje.",
-    tags: ["NetFlow", "DNS monitoring", "F5 BIG-IP", "TCP analysis"],
+  k8s3: {
+    title: "kube-scheduler",
+    desc: "Scheduler obserwuje nowo utworzone Pody bez przypisanego noda i wybiera dla nich najlepszy node. Uwzględnia: resource requests/limits, node affinity/anti-affinity, taints i tolerations, pod topology spread constraints. Można użyć custom scheduler dla specjalnych wymagań.",
+    tags: ["Resource requests", "Affinity rules", "Taints/Tolerations", "Topology spread"],
   },
-  oa1: {
-    title: "OneAgent — serce systemu",
-    desc: "Jeden plik instalacyjny na hosta. Automatycznie wykrywa i instrumentuje WSZYSTKIE procesy: aplikacje webowe, bazy danych, serwery web, kolejki wiadomości. Wysyła dane co 1 minutę do ActiveGate lub bezpośrednio do SaaS przez szyfrowane HTTPS :443. Narzut: < 1% CPU, ~150MB RAM.",
-    tags: ["Zero-config", "Self-updating", "< 1% overhead", "Single installer"],
+  k8s4: {
+    title: "Controller Manager",
+    desc: "Zbiór kontrolerów działających jako jedna binarka. Każdy kontroler obserwuje określony typ zasobu i zapewnia że rzeczywisty stan = żądany stan. Deployment Controller zarządza ReplicaSetami, ReplicaSet Controller zarządza Podami, Job Controller uruchamia jednorazowe zadania.",
+    tags: ["Deployment", "ReplicaSet", "StatefulSet", "HorizontalPodAutoscaler"],
   },
-  oa2: {
-    title: "Real User Monitoring",
-    desc: "Mały skrypt JavaScript (~20KB) wstrzykiwany automatycznie do stron web przez OneAgent na serwerze. Mierzy: Core Web Vitals, błędy JS, rage clicks, user journeys. Session Replay nagrywa całą sesję użytkownika. Wszystko korelowane z tracami backendu (E2E visibility).",
-    tags: ["JS injection", "Session Replay", "Core Web Vitals", "E2E correlation"],
+  k8s5: {
+    title: "Cloud Controller Manager",
+    desc: "Integruje Kubernetes z API konkretnego dostawcy chmury. Odpowiada za: tworzenie LoadBalancerów (Service type: LoadBalancer), zarządzanie PersistentVolumes przez CSI, aktualizację statusu nodów (Node lifecycle). Oddzielony od core K8s — każdy cloud provider dostarcza własny.",
+    tags: ["LoadBalancer", "CSI volumes", "Node lifecycle", "Cloud API"],
   },
-  oa3: {
-    title: "Distributed Tracing",
-    desc: "Każde żądanie HTTP/gRPC/messaging dostaje unikalny trace ID propagowany przez wszystkie mikroserwisy (W3C TraceContext, B3). PurePath zbiera 100% żądań bez próbkowania. Dynatrace automatycznie instrumentuje: Spring, Express, Django, ASP.NET, Rails, Go net/http i dziesiątki innych frameworków.",
-    tags: ["W3C TraceContext", "PurePath", "100% capture", "Auto-instrumentation"],
+  wk1: {
+    title: "kubelet",
+    desc: "Agent działający na każdym nodzie, odpowiedzialny za uruchamianie Podów. Dostaje PodSpec od API servera i zleca uruchomienie kontenerów przez Container Runtime Interface (CRI) — containerd lub CRI-O. Regularnie raportuje stan nodów i Podów z powrotem do API servera.",
+    tags: ["CRI", "containerd", "PodSpec", "Health probes"],
   },
-  oa4: {
-    title: "CodeModule (PaaS / Serverless)",
-    desc: "Dla środowisk gdzie nie można zainstalować pełnego OneAgenta — lekki moduł dołączany do kontenera lub funkcji serverless. Obsługuje: AWS Lambda, Azure Functions, Google Cloud Run, AWS Fargate. Zapewnia tracing i podstawowe metryki bez DaemonSet.",
-    tags: ["Lambda", "Azure Functions", "Fargate", "Cloud Run"],
+  wk2: {
+    title: "kube-proxy",
+    desc: "Implementuje Kubernetes Services — zapewnia że ruch do ClusterIP trafia do właściwego Poda. Zarządza regułami iptables lub IPVS na każdym nodzie. W nowoczesnych instalacjach z Cilium kube-proxy często jest zastępowany przez eBPF dla lepszej wydajności.",
+    tags: ["iptables", "IPVS", "ClusterIP", "NodePort"],
+  },
+  wk3: {
+    title: "Pod / Container",
+    desc: "Pod to najmniejsza jednostka w K8s — jeden lub więcej kontenerów współdzielących network namespace i volumes. Sidecar pattern: główny kontener + pomocnicze (log shipper, service mesh proxy — Envoy/Istio). Init containers uruchamiają się przed głównym kontenerem (np. migracje DB).",
+    tags: ["Sidecar pattern", "Init containers", "Shared network", "Resource limits"],
+  },
+  wk4: {
+    title: "Persistent Volume",
+    desc: "PersistentVolumeClaim (PVC) to żądanie aplikacji na storage. StorageClass definiuje typ i parametry (np. SSD, replikacja). CSI (Container Storage Interface) to standardowy driver łączący K8s z systemami storage: AWS EBS, Azure Disk, Ceph, NFS. StatefulSets automatycznie tworzą PVC per Pod.",
+    tags: ["PVC", "StorageClass", "CSI driver", "StatefulSet volumes"],
+  },
+  wk5: {
+    title: "CNI Plugin",
+    desc: "Container Network Interface definiuje jak Pody komunikują się ze sobą i ze światem zewnętrznym. Calico oferuje NetworkPolicy i routing BGP. Cilium używa eBPF dla wysokiej wydajności i zaawansowanych polityk sieciowych. Flannel to prosta opcja dla mniejszych klastrów.",
+    tags: ["NetworkPolicy", "eBPF (Cilium)", "Pod CIDR", "Calico"],
   },
 };
 
-const incidentFlow = [
-  { icon: "👤", label: "Użytkownik\nzgłasza wolną\naplikację", color: "#e94560" },
-  { icon: "⚡", label: "OneAgent\nzbiera metryki\ni traces", color: "#ef476f" },
-  { icon: "🔀", label: "ActiveGate\nrouting\n+ szyfrowanie", color: "#06d6a0" },
-  { icon: "🧠", label: "Davis AI\nroot cause\nanalysis", color: "#00b4d8" },
-  { icon: "🔔", label: "Alert do\nteamu Ops\n(< 2 min)", color: "#ffd166" },
-  { icon: "🔧", label: "Naprawa\nz pełnym\nkontekstem", color: "#06d6a0" },
+const gitopsFlow = [
+  { icon: "👨‍💻", label: "git push\ndo repo", color: "#e94560" },
+  { icon: "🏗️", label: "CI: build\n& push image", color: "#a78bfa" },
+  { icon: "🔄", label: "ArgoCD\nwykrywa zmianę", color: "#f97316" },
+  { icon: "⛵", label: "Helm template\nrenderuje YAML", color: "#06d6a0" },
+  { icon: "✅", label: "kubectl apply\ndo klastra", color: "#00b4d8" },
+  { icon: "📦", label: "Pody\nuruchomione", color: "#ffd166" },
 ];
 
 export default function App() {
@@ -214,7 +240,7 @@ export default function App() {
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <div style={{
           display: "inline-block",
-          background: "linear-gradient(90deg, #00b4d8, #06d6a0)",
+          background: "linear-gradient(90deg, #00b4d8, #06d6a0, #f97316)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           fontSize: 26,
@@ -222,7 +248,7 @@ export default function App() {
           letterSpacing: 3,
           marginBottom: 4,
         }}>
-          DYNATRACE MONITORING ARCHITECTURE
+          KUBERNETES · HELM · ARGOCD
         </div>
         <div style={{ color: "#64748b", fontSize: 12, letterSpacing: 2 }}>
           KLIKNIJ dowolny komponent aby zobaczyć szczegóły
@@ -320,10 +346,11 @@ export default function App() {
                     letterSpacing: 1,
                     fontStyle: "italic",
                   }}>
-                    {li === 0 && "dane UX → AI analiza"}
-                    {li === 1 && "konfiguracja ← → zbieranie danych"}
-                    {li === 2 && "routing & proxy"}
-                    {li === 3 && "auto-instrumentacja procesów"}
+                    {li === 0 && "git push → CI build → rejestr"}
+                    {li === 1 && "ArgoCD pobiera obraz & chart"}
+                    {li === 2 && "ArgoCD renderuje Helm templates"}
+                    {li === 3 && "kubectl apply → API server"}
+                    {li === 4 && "scheduler → kubelet → kontenery"}
                   </div>
                 </div>
               )}
@@ -410,19 +437,18 @@ export default function App() {
             padding: 14,
           }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: "#06d6a0", marginBottom: 8 }}>
-              💡 KLUCZOWA RÓŻNICA
+              💡 GITOPS — KLUCZOWA ZASADA
             </div>
             <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
-              <span style={{ color: "#06d6a0", fontWeight: 700 }}>Davis AI</span> automatycznie
-              koreluje zdarzenia i wskazuje{" "}
-              <span style={{ color: "#ffd166" }}>jedną przyczynę</span> zamiast setek alertów.
+              <span style={{ color: "#06d6a0", fontWeight: 700 }}>Git</span> jest jedynym źródłem prawdy.
+              Nikt nie robi <span style={{ color: "#e94560" }}>kubectl apply</span> ręcznie na produkcji.
               <br /><br />
-              Prometheus wymaga ręcznego konfigurowania reguł. Dynatrace robi to samo{" "}
-              <span style={{ color: "#06d6a0" }}>automatycznie</span>.
+              ArgoCD <span style={{ color: "#f97316", fontWeight: 700 }}>ciągle porównuje</span> stan klastra
+              ze stanem w gicie i automatycznie naprawia drifty.
             </div>
           </div>
 
-          {/* Statystyki */}
+          {/* Przydatne komendy */}
           <div style={{
             marginTop: 16,
             background: "rgba(255,255,255,0.02)",
@@ -431,26 +457,31 @@ export default function App() {
             padding: 14,
           }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 10 }}>
-              DYNATRACE W LICZBACH
+              PRZYDATNE KOMENDY
             </div>
             {[
-              { val: "100%", label: "trace capture (bez próbkowania)", color: "#00b4d8" },
-              { val: "< 1%", label: "narzut CPU OneAgenta", color: "#06d6a0" },
-              { val: "~2min", label: "średni czas do wykrycia problemu", color: "#ffd166" },
-              { val: "600+", label: "automatycznie wykrywanych technologii", color: "#ef476f" },
-            ].map((s) => (
-              <div key={s.label} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "baseline" }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: s.color, flexShrink: 0, minWidth: 52 }}>
-                  {s.val}
-                </div>
-                <div style={{ fontSize: 10, color: "#64748b", lineHeight: 1.4 }}>{s.label}</div>
+              { cmd: "argocd app sync <name>", color: "#f97316" },
+              { cmd: "argocd app get <name>", color: "#f97316" },
+              { cmd: "helm upgrade --install", color: "#06d6a0" },
+              { cmd: "helm diff upgrade", color: "#06d6a0" },
+              { cmd: "kubectl rollout status", color: "#00b4d8" },
+              { cmd: "kubectl get events -w", color: "#00b4d8" },
+            ].map((c) => (
+              <div key={c.cmd} style={{
+                fontSize: 10,
+                color: c.color,
+                fontFamily: "monospace",
+                padding: "3px 0",
+                borderBottom: "1px solid #1e293b",
+              }}>
+                $ {c.cmd}
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Przepływ incydentu */}
+      {/* GitOps flow */}
       <div style={{
         maxWidth: 1200,
         margin: "20px auto 0",
@@ -460,10 +491,10 @@ export default function App() {
         border: "1px solid #1e293b",
       }}>
         <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 12 }}>
-          PRZEPŁYW DANYCH — TYPOWY INCYDENT
+          GITOPS DEPLOYMENT FLOW — OD KODU DO PRODUKCJI
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-          {incidentFlow.map((step, i) => (
+          {gitopsFlow.map((step, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <div style={{
                 background: `${step.color}11`,
@@ -484,7 +515,7 @@ export default function App() {
                   {step.label}
                 </div>
               </div>
-              {i < incidentFlow.length - 1 && (
+              {i < gitopsFlow.length - 1 && (
                 <div style={{ color: "#334155", fontSize: 14 }}>→</div>
               )}
             </div>
