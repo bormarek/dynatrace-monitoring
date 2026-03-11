@@ -1,16 +1,51 @@
-# React + Vite
+# Dynatrace Monitoring Architecture
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interaktywna wizualizacja infrastruktury monitoringu Dynatrace — klikalne warstwy architektury z opisami komponentów.
 
-Currently, two official plugins are available:
+🌐 **Live demo:** https://bormarek.github.io/dynatrace-monitoring/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Uruchomienie lokalne
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Wymagania:** Node.js 18+
 
-## Expanding the ESLint configuration
+```bash
+# 1. Sklonuj repozytorium
+git clone https://github.com/bormarek/dynatrace-monitoring.git
+cd dynatrace-monitoring
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# 2. Zainstaluj zależności
+npm install
+
+# 3. Uruchom serwer deweloperski
+npm run dev
+```
+
+Strona będzie dostępna pod http://localhost:5173/
+
+---
+
+## Pozostałe komendy
+
+```bash
+npm run build    # zbuduj wersję produkcyjną (output: dist/)
+npm run preview  # podgląd wersji produkcyjnej lokalnie
+npm run deploy   # zbuduj i wypchnij na GitHub Pages
+```
+
+---
+
+## Zawartość
+
+Diagram podzielony na 5 warstw architektury Dynatrace:
+
+| Warstwa | Opis |
+|---|---|
+| **Warstwa biznesowa** | Użytkownicy, dashboardy, alerty, SLO/SLA |
+| **Dynatrace Platform** | Davis AI, SmartScape, Grail, CoPilot |
+| **ActiveGate** | Proxy, rozszerzenia, synthetic monitoring |
+| **Infrastruktura** | Kubernetes, kontenery, chmura, VM, bazy danych |
+| **OneAgent** | Automatyczna instrumentacja, RUM, distributed tracing |
+
+Kliknięcie dowolnego komponentu wyświetla szczegółowy opis i tagi techniczne.
